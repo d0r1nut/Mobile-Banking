@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1074085428191",
+    "firebase_url": "https://mobile-banking-d0r1nut-default-rtdb.firebaseio.com",
+    "project_id": "mobile-banking-d0r1nut",
+    "storage_bucket": "mobile-banking-d0r1nut.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1074085428191:android:db710ed2de2f5b890e626a",
+        "android_client_info": {
+          "package_name": "com.d0r1nut.mobilebankingproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCws9fdmxGWgvO0yIVRg6HIYlD0I1UyjC0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
