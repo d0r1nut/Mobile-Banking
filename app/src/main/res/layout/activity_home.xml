@@ -1,98 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".HomeActivity">
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_navigation" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:orientation="horizontal">
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="?android:attr/windowBackground"
+        app:menu="@menu/bottom_nav_menu" />
 
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="280dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Balance:"
-                android:textSize="24sp" />
-
-            <TextView
-                android:id="@+id/tv_balance"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="0"
-                android:text="0.00"
-                android:textAlignment="textEnd"
-                android:textSize="24sp" />
-
-            <TextView
-                android:id="@+id/tv_dollar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="$"
-                android:textSize="24sp" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/tvScheduledTransactions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Scheduled transactions:"
-            android:textSize="20sp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_scheduled_transactions"
-            android:layout_width="match_parent"
-            android:layout_height="240dp"
-            android:layout_marginBottom="10dp"
-            android:layout_weight="1">
-
-        </androidx.recyclerview.widget.RecyclerView>
-
-        <TextView
-            android:id="@+id/tvCompletedTransactions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Completed transactions:"
-            android:textSize="20sp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_completed_transactions"
-            android:layout_width="match_parent"
-            android:layout_height="280dp"
-            android:layout_marginBottom="10dp"
-            android:layout_weight="1">
-
-        </androidx.recyclerview.widget.RecyclerView>
-
-        <Button
-            android:id="@+id/btn_add_transaction"
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:backgroundTint="#B74AC3"
-            android:paddingLeft="5dp"
-            android:paddingTop="5dp"
-            android:paddingRight="5dp"
-            android:paddingBottom="5dp"
-            android:text="+"
-            android:textAlignment="center"
-            android:textColor="#E9DADA"
-            android:textSize="30sp" />
-    </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

@@ -118,6 +118,7 @@ public class AddTransactionActivity extends AppCompatActivity {
                 currentBalance = Double.parseDouble(balanceString);
             } catch (NumberFormatException e) {
                 Toast.makeText(this, "Could not parse balance", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, balanceString, Toast.LENGTH_SHORT).show();
                 return;
             }
 
