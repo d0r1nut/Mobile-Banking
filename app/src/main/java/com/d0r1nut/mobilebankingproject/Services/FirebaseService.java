@@ -17,10 +17,10 @@ import java.util.List;
 import java.util.Objects;
 
 public class FirebaseService {
-    private String TRANSACTION_NODE = "transactions";
-    private String USER_NODE = "users";
-    private DatabaseReference transactionDatabaseReference;
-    private DatabaseReference userDatabaseReference;
+    private final String TRANSACTION_NODE = "transactions";
+    private final String USER_NODE = "users";
+    private final DatabaseReference transactionDatabaseReference;
+    private final DatabaseReference userDatabaseReference;
 
 
     public FirebaseService(){
@@ -28,46 +28,37 @@ public class FirebaseService {
         userDatabaseReference = FirebaseDatabase.getInstance().getReference(USER_NODE);
     }
 
-    public void addTransaction(Transaction transaction){
+    public void addTransaction(Transaction transaction, Boolean isDeposit){
         transactionDatabaseReference.child(transaction.getTransactionId()).setValue(transaction);
 
-        userDatabaseReference.child(transaction.getSenderId()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    User user = snapshot.getValue(User.class);
-                    if (user != null) {
-                        double currentBalance = user.getBalance();
-                        double newBalance = 0;
-                        if (Objects.equals(transaction.getTransactionType().toString(), "Deposit")) {
-                            newBalance = currentBalance + transaction.getAmount();
-                        } else {
-                            newBalance = currentBalance - transaction.getAmount();
-                        }
-                        snapshot.getRef().child("balance").setValue(newBalance);
-                    }
-                }
-            }
+        updateUserBalance(transaction.getSenderId(), transaction.getAmount(), isDeposit);
+    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("FirebaseService", "Error updating balance for user: " + transaction.getSenderId(), error.toException());
-            }
-        });
+    public void updateTransaction(Transaction transaction) {
+        transactionDatabaseReference.child(transaction.getTransactionId()).setValue(transaction);
     }
 
     public void deleteTransaction(Transaction transaction){
         transactionDatabaseReference.child(transaction.getTransactionId()).removeValue();
     }
 
-
     public interface OnTransactionsReceivedListener{
         void onTransactionsReceived(List<Transaction> transactions);
         void onError(Exception e);
     }
 
+    public interface OnTransactionReceivedListener{
+        void onTransactionReceived(Transaction transaction);
+        void onError(Exception e);
+    }
+
     public interface OnBalanceChangedListener{
         void onBalanceChanged(double balance);
+        void onError(Exception e);
+    }
+
+    public interface OnUserReceivedListener{
+        void onUserReceived(User user);
         void onError(Exception e);
     }
 
@@ -93,22 +84,124 @@ public class FirebaseService {
                 });
     }
 
+    public void getTransactionsForRecipient(String recipientEmail, OnTransactionsReceivedListener listener) {
+        transactionDatabaseReference.orderByChild("recipientEmail").equalTo(recipientEmail)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        List<Transaction> transactions = new ArrayList<>();
+                        for (DataSnapshot transactionSnapshot : snapshot.getChildren()) {
+                            Transaction transaction = transactionSnapshot.getValue(Transaction.class);
+                            if (transaction != null) {
+                                transactions.add(transaction);
+                            }
+                        }
+                        listener.onTransactionsReceived(transactions);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        listener.onError(error.toException());
+                    }
+                });
+    }
+
+    public void getTransactionById(String transactionId, OnTransactionReceivedListener listener) {
+        transactionDatabaseReference.child(transactionId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    Transaction transaction = snapshot.getValue(Transaction.class);
+                    listener.onTransactionReceived(transaction);
+                } else {
+                    listener.onTransactionReceived(null);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                listener.onError(error.toException());
+            }
+        });
+    }
+
     public void getBalanceChangedForUser(String userId, OnBalanceChangedListener listener) {
         userDatabaseReference.child(userId).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.exists()){
-                        User user = snapshot.getValue(User.class);
-                        if (user != null) {
-                            listener.onBalanceChanged(user.getBalance());
-                        }
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    User user = snapshot.getValue(User.class);
+                    if (user != null) {
+                        listener.onBalanceChanged(user.getBalance());
                     }
                 }
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    listener.onError(error.toException());
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                listener.onError(error.toException());
+            }
+        });
+    }
+
+    public void getUserById(String userId, OnUserReceivedListener listener) {
+        userDatabaseReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    User user = snapshot.getValue(User.class);
+                    listener.onUserReceived(user);
+                } else {
+                    listener.onUserReceived(null);
                 }
-            });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                listener.onError(error.toException());
+            }
+        });
+    }
+
+    public void getUserByEmail(String email, OnUserReceivedListener listener) {
+        userDatabaseReference.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+                        User user = userSnapshot.getValue(User.class);
+                        listener.onUserReceived(user);
+                        return;
+                    }
+                }
+                listener.onUserReceived(null);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                listener.onError(error.toException());
+            }
+        });
+    }
+
+    public void updateUserBalance(String userId, double amount, boolean isDeposit) {
+        userDatabaseReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    User user = snapshot.getValue(User.class);
+                    if (user != null) {
+                        double currentBalance = user.getBalance();
+                        double newBalance = isDeposit ? currentBalance + amount : currentBalance - amount;
+                        snapshot.getRef().child("balance").setValue(newBalance);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("FirebaseService", "Error updating balance for user: " + userId, error.toException());
+            }
+        });
     }
 }

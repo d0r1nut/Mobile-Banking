@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.d0r1nut.mobilebankingproject.Models.TransactionType;
 import com.d0r1nut.mobilebankingproject.R;
 import com.d0r1nut.mobilebankingproject.Models.Transaction;
 import com.d0r1nut.mobilebankingproject.Models.TransactionManager;
@@ -52,6 +53,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
         holder.btnDelete.setOnClickListener(v -> {
             fbDatabase = new FirebaseService();
+            if (transaction.getTransactionType() == TransactionType.Tranfer) {
+                fbDatabase.updateUserBalance(transaction.getSenderId(), transaction.getAmount(), true);
+            }
             fbDatabase.deleteTransaction(transaction);
 
             TransactionManager.getInstance().deleteTransaction(transaction);

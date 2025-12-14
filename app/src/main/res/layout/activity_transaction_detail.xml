@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tv_transaction_detail_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Transaction Details"
+        android:textSize="32sp"
+        android:textColor="@android:color/black"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"/>
+
+    <TextView
+        android:id="@+id/tv_amount_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Amount:"
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        android:layout_below="@id/tv_transaction_detail_title"
+        android:layout_marginTop="30dp"/>
+
+    <TextView
+        android:id="@+id/tv_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        android:layout_toEndOf="@id/tv_amount_label"
+        android:layout_alignBaseline="@id/tv_amount_label"
+        android:layout_marginStart="8dp"/>
+
+    <TextView
+        android:id="@+id/tv_date_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date:"
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        android:layout_below="@id/tv_amount_label"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        android:layout_toEndOf="@id/tv_date_label"
+        android:layout_alignBaseline="@id/tv_date_label"
+        android:layout_marginStart="8dp"/>
+
+    <TextView
+        android:id="@+id/tv_sender_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="From:"
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        android:layout_below="@id/tv_date_label"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:id="@+id/tv_sender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        android:layout_toEndOf="@id/tv_sender_label"
+        android:layout_alignBaseline="@id/tv_sender_label"
+        android:layout_marginStart="8dp"/>
+
+    <TextView
+        android:id="@+id/tv_recipient_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="To:"
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        android:layout_below="@id/tv_sender_label"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:id="@+id/tv_recipient"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        android:layout_toEndOf="@id/tv_recipient_label"
+        android:layout_alignBaseline="@id/tv_recipient_label"
+        android:layout_marginStart="8dp"/>
+
+    <TextView
+        android:id="@+id/tv_message_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Message:"
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        android:layout_below="@id/tv_recipient_label"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:id="@+id/tv_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        android:layout_toEndOf="@id/tv_message_label"
+        android:layout_alignBaseline="@id/tv_message_label"
+        android:layout_marginStart="8dp"/>
+
+    <TextView
+        android:id="@+id/tv_status_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status:"
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        android:layout_below="@id/tv_message_label"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:id="@+id/tv_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        android:layout_toEndOf="@id/tv_status_label"
+        android:layout_alignBaseline="@id/tv_status_label"
+        android:layout_marginStart="8dp"/>
+
+    <LinearLayout
+        android:id="@+id/ll_confirmation_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="80dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_confirm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:backgroundTint="#4CAF50"
+            android:text="Confirm"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/btn_deny"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:backgroundTint="#E91E63"
+            android:text="Deny"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_back"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:textColor="@android:color/black"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"/>
+
+</RelativeLayout>

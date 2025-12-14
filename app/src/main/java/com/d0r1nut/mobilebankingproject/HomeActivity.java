@@ -23,18 +23,13 @@ public class HomeActivity extends AppCompatActivity {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
-        // as soon as the application opens the first
-        // fragment should be shown to the user
-        // in this case it is algorithm fragment
+
         loadFragment(new BalanceFragment());
     }
 
     private final BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            // By using switch we can easily get
-            // the selected fragment
-            // by using its id.
             Fragment selectedFragment = null;
             int itemId = item.getItemId();
             if (itemId == R.id.navigation_balance) {
@@ -44,8 +39,6 @@ public class HomeActivity extends AppCompatActivity {
             } else if (itemId == R.id.navigation_profile) {
                 selectedFragment = new ProfileFragment();
             }
-            // It will help to replace the
-            // one fragment to other.
             if (selectedFragment != null) {
                 loadFragment(selectedFragment);
             }

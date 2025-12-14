@@ -123,19 +123,21 @@ public class AddTransactionActivity extends AppCompatActivity {
             }
 
             Transaction newTransaction;
-            if(transactionType.equals("Transfer")) {
+            boolean isDeposit = false;
+            if(transactionType.equals("Transfer")) { //Transfer
                 if (transactionAmount > currentBalance) {
                     Toast.makeText(this, "Insufficient balance", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 newTransaction = new Transaction(userId, transactionRecipient, new Date(), transactionAmount, transactionMessage,  TransactionType.Tranfer, TransactionStatus.Scheduled);
             }
-            else if (transactionType.equals("Deposit")) {
+            else if (transactionType.equals("Deposit")) { //Deposit
                 if (transactionAmount > 5000) {
                     Toast.makeText(this, "Deposit amount cannot exceed $5000", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 newTransaction = new Transaction(userId, new Date(), transactionAmount, transactionMessage, TransactionType.Deposit, TransactionStatus.Completed);
+                isDeposit = true;
                 newTransaction.setAcceptedByRecipient(true);
             }
             else { //Withdrawal
@@ -146,7 +148,7 @@ public class AddTransactionActivity extends AppCompatActivity {
                 newTransaction = new Transaction(userId, new Date(), transactionAmount, transactionMessage, TransactionType.Withdrawal, TransactionStatus.Completed);
                 newTransaction.setAcceptedByRecipient(true);
             }
-            fbDatabase.addTransaction(newTransaction);
+            fbDatabase.addTransaction(newTransaction, isDeposit);
             TransactionManager.getInstance().addTransaction(newTransaction);
             finish();
         });

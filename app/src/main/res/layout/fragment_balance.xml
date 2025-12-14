@@ -41,8 +41,26 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_scheduled_transactions"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="150dp"
         android:layout_below="@+id/tv_scheduled_transactions_label"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/tv_incoming_transactions_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Incoming Transactions"
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        android:layout_below="@id/rv_scheduled_transactions"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_incoming_transactions"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_below="@id/tv_incoming_transactions_label"
         android:layout_marginTop="16dp"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
