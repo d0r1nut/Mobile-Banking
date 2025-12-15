@@ -1,6 +1,7 @@
 package com.d0r1nut.mobilebankingproject;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -11,18 +12,23 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private String userId;
+    private String email, token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        userId = getIntent().getStringExtra("USER_ID");
+//        userId = getIntent().getStringExtra("USER_ID");
+        token = getIntent().getStringExtra("TOKEN");
+        email = getIntent().getStringExtra("EMAIL");
+
+
+//        Log.d("HomeActivity", "User ID: " + userId);
+//        Log.d("HomeActivity", "Token: " + token);
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
-
 
         loadFragment(new BalanceFragment());
     }
@@ -48,7 +54,9 @@ public class HomeActivity extends AppCompatActivity {
 
     private void loadFragment(Fragment fragment) {
         Bundle bundle = new Bundle();
-        bundle.putString("USER_ID", userId);
+//        bundle.putString("USER_ID", userId);
+        bundle.putString("TOKEN", token);
+        bundle.putString("EMAIL", email);
         fragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
     }

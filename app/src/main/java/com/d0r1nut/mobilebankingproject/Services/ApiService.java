@@ -1,12 +1,15 @@
 package com.d0r1nut.mobilebankingproject.Services;
 
+import com.d0r1nut.mobilebankingproject.Models.AccountWrapper;
 import com.d0r1nut.mobilebankingproject.Models.ActivateAccountRequest;
 import com.d0r1nut.mobilebankingproject.Models.AccountInfoResponse;
 import com.d0r1nut.mobilebankingproject.Models.BalanceResponse;
 import com.d0r1nut.mobilebankingproject.Models.CreateAccountRequest;
+import com.d0r1nut.mobilebankingproject.Models.CreateAccountResponse;
 import com.d0r1nut.mobilebankingproject.Models.DepositRequest;
 import com.d0r1nut.mobilebankingproject.Models.LoginRequest;
 import com.d0r1nut.mobilebankingproject.Models.LoginResponse;
+import com.d0r1nut.mobilebankingproject.Models.StatementWrapper;
 import com.d0r1nut.mobilebankingproject.Models.TransactionHistoryResponse;
 import com.d0r1nut.mobilebankingproject.Models.TransferRequest;
 import com.d0r1nut.mobilebankingproject.Models.WithdrawRequest;
@@ -23,7 +26,7 @@ import retrofit2.http.Path;
 public interface ApiService {
 
     @POST("v1/accounts/create")
-    Call<Void> createAccount(@Body CreateAccountRequest createAccountRequest);
+    Call<CreateAccountResponse> createAccount(@Body CreateAccountRequest createAccountRequest);
 
     @POST("v1/accounts/auth")
     Call<LoginResponse> login(@Body LoginRequest loginRequest);
@@ -32,10 +35,10 @@ public interface ApiService {
     Call<Void> activateAccount(@Body ActivateAccountRequest activateAccountRequest);
 
     @GET("v1/accounts/info")
-    Call<List<AccountInfoResponse>> getAccountsInfo(@Header("x-access-token") String token);
+    Call<AccountInfoResponse> getAccountsInfo(@Header("x-access-token") String token);
 
     @GET("v1/accounts/info/{email}")
-    Call<AccountInfoResponse> getAccountInfoByEmail(@Header("x-access-token") String token, @Path("email") String email);
+    Call<AccountWrapper> getAccountInfoByEmail(@Header("x-access-token") String token, @Path("email") String email);
 
     @GET("v1/accounts/balance")
     Call<BalanceResponse> getBalance(@Header("x-access-token") String token);
@@ -50,5 +53,5 @@ public interface ApiService {
     Call<Void> withdrawFunds(@Header("x-access-token") String token, @Body WithdrawRequest withdrawRequest);
 
     @GET("v1/transactions/{days}/statement")
-    Call<TransactionHistoryResponse> getTransactionHistory(@Header("x-access-token") String token, @Path("days") int days);
+    Call<StatementWrapper> getTransactionHistory(@Header("x-access-token") String token, @Path("days") int days);
 }

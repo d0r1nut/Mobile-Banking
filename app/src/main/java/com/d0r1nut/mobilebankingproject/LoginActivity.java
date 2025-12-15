@@ -9,11 +9,21 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.d0r1nut.mobilebankingproject.Models.ApiError;
+import com.d0r1nut.mobilebankingproject.Models.LoginRequest;
+import com.d0r1nut.mobilebankingproject.Models.LoginResponse;
 import com.d0r1nut.mobilebankingproject.Models.User;
+import com.d0r1nut.mobilebankingproject.Services.ApiService;
 import com.d0r1nut.mobilebankingproject.Services.AuthFirebase;
+import com.d0r1nut.mobilebankingproject.Services.RetrofitClient;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText etEmail, etPassword;
@@ -32,40 +42,75 @@ public class LoginActivity extends AppCompatActivity {
             String email = etEmail.getText().toString();
             String password = etPassword.getText().toString();
 
-            if(email.isEmpty() || password.isEmpty()){
-                Toast.makeText(LoginActivity.this, "Please fill all fields!", Toast.LENGTH_LONG).show();
-                return;
-            }
+            LoginRequest user = new LoginRequest(email, password);
 
-            AuthFirebase fAuth = new AuthFirebase();
-            fAuth.signInUser(email, password, LoginActivity.this, result -> {
-                if(result){
-                    String userId = fAuth.getCurrentUser().getUid();
+            RetrofitClient.getInstance()
+                    .create(ApiService.class)
+                    .login(user)
+                    .enqueue(new Callback<LoginResponse>() {
+                        @Override
+                        public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                            if (response.isSuccessful()) {
+                                String token = response.body().getToken();
+                                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                                intent.putExtra("TOKEN", token);
+                                intent.putExtra("EMAIL", email);
+                                startActivity(intent);
+                                finish();
+                                Toast.makeText(LoginActivity.this, "Logged in successfully!", Toast.LENGTH_LONG).show();
+                            } else {
+                                Gson gson = new Gson();
+                                ApiError apiError = gson.fromJson(response.errorBody().charStream(), ApiError.class);
 
-                    Intent loginIntent = new Intent(LoginActivity.this, HomeActivity.class);
-                    loginIntent.putExtra("USER_ID", userId);
-                    startActivity(loginIntent);
-
-                    DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(userId);
-                    userRef.get().addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            DataSnapshot snapshot = task.getResult();
-                            if (!snapshot.exists()) {
-                                User user = new User(userId, email);
-                                userRef.setValue(user);
+                                Toast.makeText(LoginActivity.this, apiError.getError(), Toast.LENGTH_LONG).show();
                             }
-                        } else {
-                            Log.e("LoginActivity", "Error checking if user exists", task.getException());
+                        }
+
+                        @Override
+                        public void onFailure(Call<LoginResponse> call, Throwable t) {
+                            Toast.makeText(LoginActivity.this, "Error on Login user!", Toast.LENGTH_LONG).show();
                         }
                     });
-                }
-                else{
-                    Toast.makeText(LoginActivity.this, "Login failed!", Toast.LENGTH_LONG).show();
-                }
-            });
-
-
         });
+
+        //        btnLogin.setOnClickListener(v -> {
+//            String email = etEmail.getText().toString();
+//            String password = etPassword.getText().toString();
+//
+//            if(email.isEmpty() || password.isEmpty()){
+//                Toast.makeText(LoginActivity.this, "Please fill all fields!", Toast.LENGTH_LONG).show();
+//                return;
+//            }
+//
+//            AuthFirebase fAuth = new AuthFirebase();
+//            fAuth.signInUser(email, password, LoginActivity.this, result -> {
+//                if(result){
+//                    String userId = fAuth.getCurrentUser().getUid();
+//
+//                    Intent loginIntent = new Intent(LoginActivity.this, HomeActivity.class);
+//                    loginIntent.putExtra("USER_ID", userId);
+//                    startActivity(loginIntent);
+//
+//                    DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(userId);
+//                    userRef.get().addOnCompleteListener(task -> {
+//                        if (task.isSuccessful()) {
+//                            DataSnapshot snapshot = task.getResult();
+//                            if (!snapshot.exists()) {
+//                                User user = new User(userId, email);
+//                                userRef.setValue(user);
+//                            }
+//                        } else {
+//                            Log.e("LoginActivity", "Error checking if user exists", task.getException());
+//                        }
+//                    });
+//                }
+//                else{
+//                    Toast.makeText(LoginActivity.this, "Login failed!", Toast.LENGTH_LONG).show();
+//                }
+//            });
+//
+//
+//        });
 
         btnSignUp.setOnClickListener(v -> {
             Intent signupIntent = new Intent(LoginActivity.this, SignUpActivity.class);
